@@ -1,0 +1,36 @@
+{
+  "name": "@open-tw/cwa-sdk",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">= 18"
+  },
+  "type": "module",
+  "description": "台灣中央氣象署（CWA）開放資料 API 的非官方 TypeScript SDK",
+  "homepage": "https://github.com/open-tw/cwa-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/open-tw/cwa-sdk/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-tw/cwa-sdk.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "Taiwan",
+    "weather",
+    "CWA"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"no tests yet\""
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

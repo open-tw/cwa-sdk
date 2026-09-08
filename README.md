@@ -26,6 +26,30 @@ pnpm add @open-tw/cwa-sdk
 yarn add @open-tw/cwa-sdk
 ```
 
+## 快速開始
+
+在使用前，請先至 [氣象資料開放平臺](https://opendata.cwa.gov.tw) 註冊會員並取得 API Key。
+
+```ts
+import { CwaClient, CwaAuthError } from "@open-tw/cwa-sdk";
+
+const client = new CwaClient({ apiKey: process.env.CWA_API_KEY! });
+
+try {
+  const forecast = await client.forecast.getTownshipForecast({
+    locationName: "苗栗縣", // 省略則回傳全部 22 縣市
+  });
+
+  console.log(forecast.records.location[0].weatherElement);
+} catch (error) {
+  if (error instanceof CwaAuthError) {
+    console.error("API Key 無效或已過期，請確認是否正確設定");
+  } else {
+    throw error;
+  }
+}
+```
+
 ## API 涵蓋範圍
 
 > 目前為初期開發階段，API 涵蓋範圍會持續擴充，進度請參考 [Roadmap](#roadmap)。
@@ -52,8 +76,4 @@ yarn add @open-tw/cwa-sdk
 
 ## 貢獻
 
-歡迎 Issue 與 PR！在送出 PR 前，請確認：
-
-1. 已執行 `pnpm test` 且全數通過
-2. 新增功能請附上對應測試
-3. 遵循專案既有的 TypeScript 風格與錯誤處理慣例
+歡迎透過 [Issue](https://github.com/open-tw/cwa-sdk/issues) 回報問題或提出建議。
