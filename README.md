@@ -50,12 +50,59 @@ try {
 }
 ```
 
+## 行政區資料（locations）
+
+SDK 內建全臺 22 縣市、368 個鄉鎮市區的對照資料，不需要 API Key，也不會發出網路請求，適合用來做縣市／鄉鎮的二層連動選單。
+
+```ts
+import { locations } from "@open-tw/cwa-sdk";
+
+locations.counties();
+// ["宜蘭縣", "桃園市", "新竹縣", ..., "連江縣", "金門縣"]
+
+locations.townships("臺北市");
+// ["北投區", "士林區", "內湖區", ..., "大安區", "文山區"]
+```
+
+兩者皆為同步函式，直接回傳陣列，不需要 `await`。
+
+### 搭配天氣預報使用
+
+`counties()` 回傳的名稱可直接作為 `locationName` 參數：
+
+```ts
+for (const county of locations.counties()) {
+  const forecast = await client.forecast.getTownshipForecast({ locationName: county });
+  // ...
+}
+```
+
+### 注意事項
+
+- **名稱一律使用「臺」而非「台」**（臺北市、臺中市、臺南市、臺東縣），與 CWA API 一致。SDK 不會自動轉換寫法，`townships("台北市")` 會回傳空陣列而非拋出錯誤。若縣市名稱來自使用者輸入或外部系統，請在呼叫前自行正規化。
+- **排列順序**取自 CWA [縣市鄉鎮對照表](https://opendata.cwa.gov.tw/opendatadoc/Opendata_City.pdf) 附錄 A，大致由北而南、本島至離島，直接用於選單即為合理順序。
+- **鄉鎮名稱在跨縣市時可能重複**（如 `中正區`、`信義區`、`東區`），因此判斷鄉鎮時請一併帶上縣市。
+- 回傳的皆為**新陣列**，呼叫端可安全地 `sort()` 或 `filter()`，不會影響 SDK 內部資料。
+
+TypeScript 使用者可另外匯入 `TaiwanCounty` 型別：
+
+```ts
+import { locations, type TaiwanCounty } from "@open-tw/cwa-sdk";
+
+function pick(county: TaiwanCounty) {
+  return locations.townships(county);
+}
+```
+
+由於 `townships()` 的參數型別為 `TaiwanCounty`，若縣市名稱來自 API 回應、網址參數等 `string` 來源，需自行收窄型別後再傳入。
+
 ## API 涵蓋範圍
 
 > 目前為初期開發階段，API 涵蓋範圍會持續擴充，進度請參考 [Roadmap](#roadmap)。
 
 | 分類         | 說明                          | 狀態      |
 | ------------ | ----------------------------- | --------- |
+| 行政區資料   | 縣市與鄉鎮市區對照表（本地）  | ✅ 可用   |
 | 一般天氣預報 | 36 小時天氣預報、鄉鎮天氣預報 | 🚧 開發中 |
 | 地震資料     | 顯著有感地震報告              | 📋 規劃中 |
 | 降雨與觀測   | 自動氣象站觀測資料            | 📋 規劃中 |
