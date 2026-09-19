@@ -45,6 +45,19 @@ export class CwaUnknownError extends CwaApiError {
   }
 }
 
+/**
+ * 找不到對應的縣市，無從得知要查詢哪一個 dataset。
+ * 通常是縣市名稱有誤，例如用了「台」而非「臺」。
+ */
+export class CwaUnsupportedCountyError extends CwaApiError {
+  constructor(county: string) {
+    super(
+      `找不到縣市「${county}」，請確認名稱是否正確（注意是「臺」不是「台」）`,
+    );
+    this.name = "CwaUnsupportedCountyError";
+  }
+}
+
 /** 官方回傳的 JSON 結構與預期不符時拋出（例如缺少某個 weatherElement） */
 export class CwaParseError extends CwaApiError {
   constructor(message: string) {
